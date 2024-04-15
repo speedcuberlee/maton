@@ -1,0 +1,54 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  wayback:
+    host: '*'
+    paths: "/__wb/search/host"
+  api:
+    host: '*'
+    paths: ['/','/*']
+     
+serviceEndpoints:
+  nextwayback:
+    url: 'https://web.archive.org'
+  httpbin:
+    url: 'http://localhost:5500'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  nextdefault:
+    apiEndpoints:
+      - wayback
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD,PUT,PATCH,POST,DELETE'
+              allowedHeaders: ['Content-Type', 'Authorization']
+      - proxy:
+          - action:
+              serviceEndpoint: nextwayback 
+              changeOrigin: true
+  default:
+    apiEndpoints:
+      - api
+    policies:
+      - cors:
+          - action:
+              origin: '*'
+              methods: 'HEAD,PUT,PATCH,POST,DELETE'
+              allowedHeaders: ['Content-Type', 'Authorization']
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
