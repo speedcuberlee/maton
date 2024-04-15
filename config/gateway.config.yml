@@ -15,7 +15,7 @@ serviceEndpoints:
   nextwayback:
     url: 'https://web.archive.org'
   httpbin:
-    url: 'http://localhost:5500'
+    url: 'https://maton-frontend.onrender.com'
 policies:
   - basic-auth
   - cors
